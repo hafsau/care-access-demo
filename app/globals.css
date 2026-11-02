@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/*
+ * Care Access design tokens, by their own names, read from the Tailwind CSS
+ * of cardiometabolicscreening.careaccess.com on 2026-11-02 (care-boots,
+ * care-dusk, care-ctaDefault, ivory-300, ...). Components follow the live
+ * screening form: serif question headings in dusk, a 24px ivory progress
+ * track, plain option rows with native controls in dusk and text in boots,
+ * 48px inputs with 4px corners, white cards with a grace border and 20px
+ * corners, and pill buttons.
+ *
+ * Type: the screening site sets pages in IBM Plex Sans and Plex Serif (and the
+ * form in Pensum, which is licensed). This concept uses Plex for both.
+ *
+ * Adapted for WCAG 2.2 AA, each listed on /system:
+ *  - care-borderColor #E2E8F0 is 1.2:1 against white: fine for dividers,
+ *    too faint for a control's edge (1.4.11). Inputs and option rows use
+ *    "control" #7A8A86 (3.4:1 on the page, 3.6:1 on white).
+ *  - care-sunrise #F75C2E is 3.0:1 on background: decoration only. Text
+ *    accents use care-sunset #B54500 (5.2:1).
+ *  - care-motion #009991 is 3.3:1: indicators only, never text.
+ */
+:root {
+  --care-boots: #19686b;
+  --care-dusk: #0f3d42;
+  --care-cta: #0d715e;
+  --care-motion: #009991;
+  --care-sunrise: #f75c2e;
+  --care-sunset: #b54500;
+  --care-grace: #abc9ba;
+  --care-grace-light: #e6f8ef;
+  --care-ivory: #f1ede2;
+  --care-ivory-300: #f2ede0;
+  --care-background: #fbf8f4;
+  --care-background-light: #f5f2ea;
+  --care-gray-light: #f3f4f6;
+  --care-gray-dark: #5f6577;
+  --care-border: #e2e8f0;
+
+  /* Additions for this concept (not in their CSS), each checked for contrast. */
+  --control: #7a8a86;
+  --not: #9a3a00;
+  --not-bg: #fcebe1;
+  --danger: #b3261e;
+  --danger-bg: #fbe9e7;
+}
+
+@theme inline {
+  --color-boots: var(--care-boots);
+  --color-dusk: var(--care-dusk);
+  --color-cta: var(--care-cta);
+  --color-motion: var(--care-motion);
+  --color-sunrise: var(--care-sunrise);
+  --color-sunset: var(--care-sunset);
+  --color-grace: var(--care-grace);
+  --color-grace-light: var(--care-grace-light);
+  --color-ivory: var(--care-ivory);
+  --color-ivory-300: var(--care-ivory-300);
+  --color-background: var(--care-background);
+  --color-background-light: var(--care-background-light);
+  --color-gray-light: var(--care-gray-light);
+  --color-muted: var(--care-gray-dark);
+  --color-line: var(--care-border);
+  --color-control: var(--control);
+  --color-met: var(--care-cta);
+  --color-met-bg: var(--care-grace-light);
+  --color-not: var(--not);
+  --color-not-bg: var(--not-bg);
+  --color-unknown: var(--care-dusk);
+  --color-unknown-bg: var(--care-ivory);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-serif: var(--font-plex-serif), Georgia, serif;
+}
+
+html {
+  background: var(--care-background);
+}
+
+body {
+  background: var(--care-background);
+  color: var(--care-dusk);
+}
+
+/* Their headings: Plex Serif, regular weight. */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Their small uppercase section labels ("SOURCES"): Plex Sans 500, 0.05em. */
+.eyebrow {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--care-sunset);
+  outline-offset: 2px;
+}
+
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Movement only, never opacity: content is readable even if the animation never runs. */
+  .rise {
+    animation: rise 0.28s ease-out;
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(6px);
+    }
+  }
+}

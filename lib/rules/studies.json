@@ -1,0 +1,46 @@
+{
+  "$comment": "Fictional studies. Every criterion is tri-state (met, notMet, unknown). `resolvedAt` says where it can be answered: in the pre-screen, at the screening visit, or on the call. `examples` drive the generated tests: `pass` makes the criterion met, `fail` makes it notMet.",
+  "studies": [
+    {
+      "id": "HL-204",
+      "name": { "en": "Heart and Lp(a) study", "es": "Estudio del corazón y Lp(a)" },
+      "summary": { "en": "A study of a new medicine for people with heart disease and high Lp(a).", "es": "Un estudio de un medicamento nuevo para personas con enfermedad del corazón y Lp(a) alto." },
+      "criteria": [
+        { "id": "age", "kind": "include", "field": "age", "op": "between", "value": [40, 80], "resolvedAt": "prescreen",
+          "label": { "en": "Age 40 to 80", "es": "Entre 40 y 80 años" }, "examples": { "pass": 58, "fail": 35 } },
+        { "id": "heartHistory", "kind": "include", "field": "heart", "op": "anyOf", "value": ["heartAttack", "stroke", "cad", "stent", "bypass"], "resolvedAt": "prescreen",
+          "label": { "en": "Has had a heart attack, stroke, stent, bypass or coronary artery disease", "es": "Ha tenido un ataque al corazón, derrame cerebral, stent, bypass o enfermedad de las arterias coronarias" },
+          "examples": { "pass": ["stent"], "fail": ["none"] } },
+        { "id": "cancer", "kind": "exclude", "field": "cancer5y", "op": "equals", "value": "yes", "resolvedAt": "prescreen",
+          "label": { "en": "No cancer treatment in the past 5 years", "es": "Sin tratamiento de cáncer en los últimos 5 años" }, "examples": { "pass": "no", "fail": "yes" } },
+        { "id": "lpa", "kind": "include", "resolvedAt": "screening",
+          "label": { "en": "Lp(a) in the study's range", "es": "Lp(a) dentro del rango del estudio" } },
+        { "id": "otherStudy", "kind": "exclude", "resolvedAt": "call",
+          "label": { "en": "Not in another medicine study right now", "es": "No está en otro estudio de medicamentos ahora" } }
+      ],
+      "amendments": [
+        { "id": "amend-2", "title": { "en": "Amendment 2: exclude current smokers", "es": "Enmienda 2: excluir a quienes fuman ahora" },
+          "criterion": { "id": "smoking", "kind": "exclude", "field": "smoking", "op": "equals", "value": "current", "resolvedAt": "prescreen",
+            "label": { "en": "Doesn't smoke now", "es": "No fuma ahora" }, "examples": { "pass": "never", "fail": "current" } } }
+      ]
+    },
+    {
+      "id": "KD-118",
+      "name": { "en": "Kidney health study", "es": "Estudio de la salud de los riñones" },
+      "summary": { "en": "A study for people with type 2 diabetes and early kidney disease.", "es": "Un estudio para personas con diabetes tipo 2 y enfermedad de los riñones en etapa temprana." },
+      "criteria": [
+        { "id": "age", "kind": "include", "field": "age", "op": "between", "value": [30, 75], "resolvedAt": "prescreen",
+          "label": { "en": "Age 30 to 75", "es": "Entre 30 y 75 años" }, "examples": { "pass": 58, "fail": 80 } },
+        { "id": "t2d", "kind": "include", "field": "kidney", "op": "anyOf", "value": ["t2d"], "resolvedAt": "prescreen",
+          "label": { "en": "Has type 2 diabetes", "es": "Tiene diabetes tipo 2" }, "examples": { "pass": ["t2d"], "fail": ["prediabetes"] } },
+        { "id": "dialysis", "kind": "exclude", "field": "kidney", "op": "anyOf", "value": ["dialysis"], "resolvedAt": "prescreen",
+          "label": { "en": "Not on dialysis", "es": "No está en diálisis" }, "examples": { "pass": ["t2d"], "fail": ["dialysis"] } },
+        { "id": "cancer", "kind": "exclude", "field": "cancer5y", "op": "equals", "value": "yes", "resolvedAt": "prescreen",
+          "label": { "en": "No cancer treatment in the past 5 years", "es": "Sin tratamiento de cáncer en los últimos 5 años" }, "examples": { "pass": "no", "fail": "yes" } },
+        { "id": "egfr", "kind": "include", "resolvedAt": "screening",
+          "label": { "en": "Kidney function in the study's range", "es": "Función de los riñones dentro del rango del estudio" } }
+      ],
+      "amendments": []
+    }
+  ]
+}
