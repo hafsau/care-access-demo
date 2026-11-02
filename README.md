@@ -42,3 +42,7 @@ npm run e2e        # Playwright + axe, keyboard, 320px, 200% zoom
 ```
 
 Designed and built by Hafsa Usmani with Claude Code.
+
+## License
+
+MIT for the code (see LICENSE). IBM Plex is under the SIL Open Font License. Care Access's name and design tokens belong to Care Access.
