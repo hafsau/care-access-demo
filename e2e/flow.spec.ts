@@ -37,7 +37,7 @@ async function bookAsRosa(page: Page) {
   await page.getByLabel("Número de teléfono").fill("(323) 555-0148");
   await page.locator("fieldset#shared").getByRole("radio", { name: "No" }).check();
   await page.locator("fieldset#voicemail").getByRole("radio", { name: "Sí" }).check();
-  await page.getByRole("radio", { name: /Noche/ }).check();
+  await page.getByRole("radio", { name: /noche/i }).check();
   await page.getByRole("checkbox", { name: "No uso email" }).check();
   await cont(page);
   await page.getByRole("checkbox", { name: "Hispano o latino" }).check();
@@ -57,10 +57,10 @@ test("Rosa books in Spanish, and the coordinator's record follows her choices", 
   await expect(rec.getByRole("heading", { name: "Rosa Delgado" })).toBeVisible();
   await expect(rec.getByText("Spanish-speaking callback")).toBeVisible();
   await expect(rec.getByRole("button", { name: "Start automated call" })).toBeDisabled();
-  await expect(rec.getByText(/Rosa said no on Nov 2, .* \(Spanish, wording draft v1\)\. Call her yourself\./)).toBeVisible();
+  await expect(rec.getByText(/Automated voice calls: Rosa said no on Nov 2, .* \(Spanish, wording draft v1\)\. Call yourself instead\./)).toBeVisible();
   await expect(rec.getByRole("button", { name: "Call in Spanish" })).toBeEnabled();
   await expect(rec.getByText("Possible match: worth a conversation")).toBeVisible();
-  await expect(rec.getByText("She said: High cholesterol, A stent in a heart artery")).toBeVisible();
+  await expect(rec.getByText("Pre-screen answer: High cholesterol, A stent in a heart artery")).toBeVisible();
   await expect(rec.getByText("Not a match")).toBeVisible();
 });
 
@@ -69,7 +69,7 @@ test("turning texts off on her phone blocks texting on the coordinator's side", 
   await page.getByRole("button", { name: "Desactivar: Mensajes de texto" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Mensajes de texto: desactivado" })).toBeVisible();
   await page.getByRole("link", { name: "Coordinator" }).click();
-  await expect(page.getByText(/Rosa turned this off on Nov 2.*Call her instead\./)).toBeVisible();
+  await expect(page.getByText(/Text messages: Rosa turned this off on Nov 2.*Call instead\./).first()).toBeVisible();
 });
 
 test("switching language mid-flow keeps her answers", async ({ page }) => {
@@ -137,23 +137,78 @@ test("saying no to study matching skips every health question", async ({ page })
   await expect(heading(page)).toHaveText("How can we reach you?");
 });
 
-test("the whole booking works with the keyboard alone", async ({ page }) => {
+test("the booking works with the keyboard alone, through the consent choices", async ({ page }) => {
   await page.goto("/prescreen");
   const press = async (key: string, n = 1) => {
     for (let i = 0; i < n; i++) await page.keyboard.press(key);
   };
-  await page.getByRole("button", { name: "Start" }).focus();
+  const tabTo = async (name: RegExp | string, role: "button" | "radio" | "checkbox" | "textbox" = "button") => {
+    const target = page.getByRole(role, { name, exact: typeof name === "string" }).first();
+    for (let i = 0; i < 40; i++) {
+      if (await target.evaluate((el) => el === document.activeElement)) return;
+      await press("Tab");
+    }
+    throw new Error(`couldn't tab to ${name}`);
+  };
+  await tabTo("Start");
   await press("Enter");
   await expect(heading(page)).toBeFocused();
-  await page.getByLabel("ZIP code").focus();
+  await tabTo("ZIP code", "textbox");
   await page.keyboard.type("90022");
-  await press("Tab");
-  await press("Space"); // first site radio
-  await expect(page.getByRole("radio", { name: /Maple Street/ })).toBeChecked();
-  await page.getByRole("button", { name: "Continue", exact: true }).focus();
+  await tabTo(/Maple Street/, "radio");
+  await press("Space");
+  await tabTo("Continue");
   await press("Enter");
   await expect(heading(page)).toHaveText("Who is this screening for?");
   await expect(heading(page)).toBeFocused();
+  await tabTo("Me", "radio");
+  await press("Space");
+  await tabTo("Continue");
+  await press("Enter");
+  await tabTo("Month", "textbox");
+  await page.keyboard.type("3");
+  await press("Tab");
+  await page.keyboard.type("14");
+  await press("Tab");
+  await page.keyboard.type("1968");
+  await tabTo("Continue");
+  await press("Enter");
+  await expect(heading(page)).toHaveText("Your choices");
+  await tabTo("Yes, use my answers for my screening", "checkbox");
+  await press("Space");
+  for (const r of ["Yes, check for studies", "Yes, text me"]) {
+    await tabTo(r, "radio");
+    await press("Space");
+  }
+  // Inside a radio group, arrow keys move between options (Tab only stops once per group).
+  await tabTo("Yes, automated calls are OK", "radio");
+  await press("ArrowDown");
+  await expect(page.getByRole("radio", { name: "No automated calls" })).toBeChecked();
+  await tabTo("Continue");
+  await press("Enter");
+  await expect(heading(page)).toHaveText("Has a doctor ever told you that you had any of these?");
+});
+
+test("booking for someone else never defaults the legal role, and a representative gives their own details", async ({ page }) => {
+  await page.goto("/prescreen");
+  await page.getByRole("button", { name: "Start" }).click();
+  await page.getByLabel("ZIP code").fill("90022");
+  await page.getByRole("radio", { name: /Maple Street/ }).check();
+  await cont(page, "en");
+  await page.getByRole("radio", { name: "Someone else" }).check();
+  await expect(page.getByRole("radio", { name: /I make medical decisions/ })).not.toBeChecked();
+  await expect(page.getByRole("radio", { name: /I'm helping them/ })).not.toBeChecked();
+  await cont(page, "en");
+  await expect(page.getByRole("alert").filter({ hasText: "Choose how you're helping them" })).toBeVisible();
+  await page.getByRole("radio", { name: /I make medical decisions/ }).check();
+  await page.getByLabel("Your full name").fill("Denise Brooks");
+  await page.getByLabel("Your phone number").fill("(323) 555-0177");
+  await cont(page, "en");
+  await page.getByLabel("Month").fill("2");
+  await page.getByLabel("Day").fill("17");
+  await page.getByLabel("Year").fill("1953");
+  await cont(page, "en");
+  await expect(page.getByText(/You're answering for the person you're booking for/)).toBeVisible();
 });
 
 test("the split view plays Rosa's booking and shows her record", async ({ page }) => {

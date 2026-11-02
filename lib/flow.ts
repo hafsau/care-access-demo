@@ -52,6 +52,8 @@ export function problems(step: StepId, p: Participant): Problem[] {
       break;
     case "who":
       if (!p.filledBy) out.push({ field: "filledBy", key: "who.error" });
+      else if (p.filledBy === "other") out.push({ field: "helperRole", key: "who.roleError" });
+      else if (p.filledBy === "lar" && (!p.rep?.name.trim() || (p.rep?.phone ?? "").replace(/\D/g, "").length !== 10)) out.push({ field: "rep-name", key: "who.repError" });
       break;
     case "dob":
       if (!validDob(p.dob)) out.push({ field: "dob-month", key: "dob.error" });

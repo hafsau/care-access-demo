@@ -21,7 +21,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable} antialiased`}>
-      <body className="font-sans text-[16px] leading-6">
+      <body className="font-sans text-base leading-6">
         <StoreProvider>
           <Shell>{children}</Shell>
         </StoreProvider>

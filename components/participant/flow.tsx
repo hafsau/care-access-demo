@@ -74,12 +74,12 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
   return (
     <div lang={p.lang} className={`flex flex-col ${framed ? "min-h-full" : ""}`}>
       {/* Their form's title band: boots, white serif. */}
-      <div className="bg-boots px-4 py-3 text-white">
-        {framed ? <p className="display text-[19px] leading-snug">{c.formTitle}</p> : <h1 className="display mx-auto max-w-[560px] text-[19px] leading-snug">{c.formTitle}</h1>}
+      <div className="bg-care-boots px-4 py-3 text-white">
+        {framed ? <p className="display text-xl leading-snug">{c.formTitle}</p> : <h1 className="display mx-auto max-w-[560px] text-xl leading-snug">{c.formTitle}</h1>}
       </div>
       <div className={`flex min-h-12 items-center justify-between gap-2 px-4 py-2 ${framed ? "" : "mx-auto w-full max-w-[592px]"}`}>
         {screen !== "intro" ? (
-          <button type="button" onClick={back} className="-ml-2 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-[15px] text-dusk hover:bg-gray-light">
+          <button type="button" onClick={back} className="-ml-2 inline-flex min-h-11 items-center gap-1 rounded-full px-2 text-base text-care-dusk hover:bg-care-gray_light">
             <Icon name="back" className="h-4 w-4" />
             {c.back}
           </button>
@@ -90,7 +90,7 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
           type="button"
           onClick={() => dispatch({ type: "lang", lang: p.lang === "en" ? "es" : "en" })}
           lang={p.lang === "en" ? "es" : "en"}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-gray-light px-3 text-[15px] text-dusk hover:bg-ivory"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-care-gray_light px-3 text-base text-care-dusk hover:bg-care-ivory"
         >
           <Icon name="globe" className="h-4 w-4" />
           {c.switchLang}
@@ -98,7 +98,7 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
       </div>
 
       {p.lang === "es" && !SPANISH_REVIEW.reviewed && (
-        <p lang="en" className="bg-ivory px-4 py-1.5 text-[12px] text-muted">
+        <p lang="en" className="bg-care-ivory px-4 py-1.5 text-xs text-care-gray_dark">
           Spanish drafted for this concept; native-speaker review pending.
         </p>
       )}
@@ -106,6 +106,12 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
       <div className={`flex-1 px-4 pb-6 pt-5 ${framed ? "" : "mx-auto w-full max-w-[560px]"}`}>
         {stepNo > 0 && <Progress label={c.step(stepNo, stepList.length)} value={stepNo / stepList.length} />}
         <ErrorSummary title={c.errorTitle} summaryRef={summary} items={shown.map((x) => ({ field: x.field, text: pick(c, x.key) }))} />
+        {(p.filledBy === "lar" || p.filledBy === "helper") && (screen === "choices" || screen === "contact" || screen === "about" || String(screen).startsWith("health:")) && (
+          <p className="mb-4 flex gap-2 rounded-2xl border border-care-grace bg-white p-3 text-base leading-6">
+            <Icon name="user" className="mt-0.5 h-5 w-5 flex-none text-care-boots" />
+            {p.filledBy === "lar" ? c.who.answerAs : c.who.helperBanner}
+          </p>
+        )}
         <div key={String(screen)} className="rise">
           <ScreenBody screen={screen} c={c} p={p} update={update} errorFor={errorFor} heading={heading} />
         </div>
@@ -114,11 +120,11 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
             <button type="button" onClick={next} className={`${btn("primary")} w-full`}>
               {screen === "intro" ? c.intro.start : screen === "review" ? c.review.book : c.next}
             </button>
-            {screen === "review" && <p className="mt-2 text-center text-[14px] text-muted">{c.review.sendsNote}</p>}
+            {screen === "review" && <p className="mt-2 text-center text-sm text-care-gray_dark">{c.review.sendsNote}</p>}
           </div>
         )}
         {screen !== "review" && screen !== "under18" && (
-          <p className="mt-4 flex items-start gap-1.5 text-[13px] leading-5 text-muted">
+          <p className="mt-4 flex items-start gap-1.5 text-sm leading-5 text-care-gray_dark">
             <Icon name="lock" className="mt-0.5 h-3.5 w-3.5 flex-none" />
             {c.savedOnPhone}
           </p>
@@ -133,13 +139,13 @@ function Progress({ label, value }: { label: string; value: number }) {
   return (
     <div className="mb-5">
       <div className="relative h-6 w-full rounded-full bg-ivory-300" aria-hidden="true">
-        <div className="flex h-6 items-center justify-end rounded-full bg-boots pr-1 transition-[width] duration-300" style={{ width: `max(${Math.round(value * 100)}%, 2.25rem)` }}>
+        <div className="flex h-6 items-center justify-end rounded-full bg-care-boots pr-1 transition-[width] duration-300" style={{ width: `max(${Math.round(value * 100)}%, 2.25rem)` }}>
           <svg viewBox="0 0 24 24" className="h-4 w-4 text-white" fill="currentColor">
             <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
           </svg>
         </div>
       </div>
-      <p className="mt-2 text-[14px] font-medium text-boots">{label}</p>
+      <p className="mt-2 text-sm font-medium text-care-boots">{label}</p>
     </div>
   );
 }
@@ -147,7 +153,7 @@ function Progress({ label, value }: { label: string; value: number }) {
 function H({ heading, children }: { heading: React.RefObject<HTMLHeadingElement | null>; children: React.ReactNode }) {
   const ns = useScope();
   return (
-    <h2 ref={heading} tabIndex={-1} id={`${ns}step-heading`} className="display text-[30px] text-dusk sm:text-[34px]">
+    <h2 ref={heading} tabIndex={-1} id={`${ns}step-heading`} className="display text-3xl text-care-dusk sm:text-4xl">
       {children}
     </h2>
   );
@@ -174,8 +180,8 @@ function ScreenBody({
       return (
         <>
           <H heading={heading}>{c.intro.title}</H>
-          <p className="mt-3 text-[17px] leading-7">{c.intro.body}</p>
-          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-grace-light px-3 py-1 text-[14px] font-medium">
+          <p className="mt-3 text-lg leading-7">{c.intro.body}</p>
+          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-care-grace_light px-3 py-1 text-sm font-medium">
             <Icon name="clock" className="h-4 w-4" />
             {c.intro.time}
           </p>
@@ -198,12 +204,13 @@ function ScreenBody({
                 { value: "other", label: c.who.someoneElse },
               ]}
               value={p.filledBy === undefined ? undefined : p.filledBy === "self" ? "self" : "other"}
-              onChange={(v) => update((x) => ({ ...x, filledBy: v === "self" ? "self" : x.filledBy && x.filledBy !== "self" ? x.filledBy : "helper" }))}
+              // Booking for someone else never defaults to a legal role: they choose it next.
+              onChange={(v) => update((x) => ({ ...x, filledBy: v === "self" ? "self" : x.filledBy && x.filledBy !== "self" ? x.filledBy : "other" }))}
               error={errorFor("filledBy")}
             />
           </div>
           {p.filledBy && p.filledBy !== "self" && (
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col gap-5">
               <OptionList
                 name="helperRole"
                 legend={c.who.roleTitle}
@@ -211,13 +218,55 @@ function ScreenBody({
                   { value: "helper", label: c.who.helping, hint: c.who.helpingHint },
                   { value: "lar", label: c.who.lar, hint: c.who.larHint },
                 ]}
-                value={p.filledBy}
+                value={p.filledBy === "other" ? undefined : p.filledBy}
                 onChange={(v) => update((x) => ({ ...x, filledBy: v as "helper" | "lar" }))}
+                error={errorFor("helperRole")}
               />
-              <p className="mt-4 flex gap-2 rounded-[14px] bg-ivory p-4 text-[15px] leading-6">
-                <Icon name="info" className="mt-0.5 h-5 w-5 flex-none" />
-                {p.filledBy === "lar" ? c.who.larNote : c.who.helpingNote}
-              </p>
+              {p.filledBy === "lar" && (
+                <>
+                  <p className="flex gap-2 rounded-2xl bg-care-ivory p-4 text-base leading-6">
+                    <Icon name="info" className="mt-0.5 h-5 w-5 flex-none" />
+                    {c.who.larNote}
+                  </p>
+                  <TextField id="rep-name" label={c.who.repName} autoComplete="name" value={p.rep?.name ?? ""} onChange={(v) => update((x) => ({ ...x, rep: { name: v, relationship: x.rep?.relationship ?? "", phone: x.rep?.phone ?? "" } }))} error={errorFor("rep-name")} />
+                  <TextField
+                    id="rep-relationship"
+                    label={c.who.repRelationship}
+                    hint={c.who.repRelationshipHint}
+                    optional={c.optional}
+                    value={p.rep?.relationship ?? ""}
+                    onChange={(v) => update((x) => ({ ...x, rep: { name: x.rep?.name ?? "", relationship: v, phone: x.rep?.phone ?? "" } }))}
+                  />
+                  <TextField
+                    id="rep-phone"
+                    label={c.who.repPhone}
+                    hint={c.who.repPhoneHint}
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel-national"
+                    value={p.rep?.phone ?? ""}
+                    onChange={(v) => update((x) => ({ ...x, rep: { name: x.rep?.name ?? "", relationship: x.rep?.relationship ?? "", phone: v } }))}
+                  />
+                </>
+              )}
+              {p.filledBy === "helper" && (
+                <p className="flex gap-2 rounded-2xl bg-care-ivory p-4 text-base leading-6">
+                  <Icon name="info" className="mt-0.5 h-5 w-5 flex-none" />
+                  {c.who.helpingNote}
+                </p>
+              )}
+              {(p.filledBy === "helper" || p.filledBy === "lar") && (
+                <OptionList
+                  name="callLang"
+                  legend={c.who.callLang}
+                  options={[
+                    { value: "en", label: "English" },
+                    { value: "es", label: "Español" },
+                  ]}
+                  value={p.callLang ?? p.lang}
+                  onChange={(v) => update((x) => ({ ...x, callLang: v as "en" | "es" }))}
+                />
+              )}
             </div>
           )}
         </>
@@ -230,7 +279,7 @@ function ScreenBody({
       return (
         <>
           <H heading={heading}>{c.dob.under18Title}</H>
-          <p className="mt-3 text-[17px] leading-7">{c.dob.under18Body}</p>
+          <p className="mt-3 text-lg leading-7">{c.dob.under18Body}</p>
         </>
       );
 
@@ -277,8 +326,8 @@ function ScreenBody({
                 value={p.contact.email}
                 onChange={(v) => update((x) => ({ ...x, contact: { ...x.contact, email: v } }))}
               />
-              <label className="mt-2 flex min-h-11 items-center gap-3 text-[16px]">
-                <input type="checkbox" className="h-5 w-5 accent-[var(--care-dusk)]" checked={p.contact.noEmail} onChange={(e) => update((x) => ({ ...x, contact: { ...x.contact, noEmail: e.target.checked, email: e.target.checked ? "" : x.contact.email } }))} />
+              <label className="mt-2 flex min-h-11 items-center gap-3 text-base">
+                <input type="checkbox" className="h-5 w-5 accent-care-dusk" checked={p.contact.noEmail} onChange={(e) => update((x) => ({ ...x, contact: { ...x.contact, noEmail: e.target.checked, email: e.target.checked ? "" : x.contact.email } }))} />
                 {c.contact.noEmail}
               </label>
             </div>
@@ -290,7 +339,7 @@ function ScreenBody({
       return (
         <>
           <H heading={heading}>{c.about.title}</H>
-          <p className="mt-3 rounded-[14px] bg-ivory p-4 text-[15px] leading-6">{c.about.why}</p>
+          <p className="mt-3 rounded-2xl bg-care-ivory p-4 text-base leading-6">{c.about.why}</p>
           <div className="mt-5 flex flex-col gap-6">
             <OptionList
               name="race"
@@ -322,7 +371,7 @@ function ScreenBody({
       return (
         <>
           <H heading={heading}>{c.time.title}</H>
-          <p className="mt-2 text-[16px] text-muted">{c.time.at(s.name)}</p>
+          <p className="mt-2 text-base text-care-gray_dark">{c.time.at(s.name)}</p>
           <div className="mt-4 flex flex-col gap-6">
             {days.map((d) => (
               <OptionList
@@ -356,6 +405,7 @@ function ScreenBody({
 function Where({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; update: (f: (p: Participant) => Participant) => void; errorFor: (f: string) => string | undefined; heading: React.RefObject<HTMLHeadingElement | null> }) {
   const [notify, setNotify] = useState<"idle" | "form" | "done">("idle");
   const [phone, setPhone] = useState("");
+  const [optIn, setOptIn] = useState(false);
   const zipOk = /^\d{5}$/.test(p.zip);
   const near = zipOk ? sitesNear(p.zip) : [];
   return (
@@ -391,9 +441,9 @@ function Where({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; u
         </div>
       )}
       {zipOk && near.length === 0 && (
-        <div className="mt-6 rounded-[16px] bg-ivory p-4" role="status">
-          <h3 className="text-[18px] font-semibold">{c.where.noneTitle}</h3>
-          <p className="mt-1 text-[16px] leading-6">{c.where.noneBody}</p>
+        <div className="mt-6 rounded-2xl bg-care-ivory p-4" role="status">
+          <h3 className="text-lg font-semibold">{c.where.noneTitle}</h3>
+          <p className="mt-1 text-base leading-6">{c.where.noneBody}</p>
           {notify === "idle" && (
             <button type="button" className={`${btn("outline", "sm")} mt-3`} onClick={() => setNotify("form")}>
               {c.where.noneAction}
@@ -402,12 +452,16 @@ function Where({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; u
           {notify === "form" && (
             <div className="mt-3 flex flex-col gap-3">
               <TextField id="notify-phone" label={c.contact.phone} type="tel" inputMode="tel" autoComplete="tel-national" value={phone} onChange={setPhone} />
-              <button type="button" className={btn("primary", "sm")} disabled={phone.replace(/\D/g, "").length !== 10} onClick={() => setNotify("done")}>
+              <label className="flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-care-boots hover:bg-care-gray_light">
+                <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="h-5 w-5 flex-none translate-y-[3px] accent-care-dusk" />
+                <span className="text-lg leading-[1.35]">{c.where.noneOptIn}</span>
+              </label>
+              <button type="button" className={btn("primary", "sm")} disabled={phone.replace(/\D/g, "").length !== 10 || !optIn} onClick={() => setNotify("done")}>
                 {c.where.noneAction}
               </button>
             </div>
           )}
-          {notify === "done" && <p className="mt-3 text-[15px] font-medium">{c.where.noneDone}</p>}
+          {notify === "done" && <p className="mt-3 text-base font-medium">{c.where.noneDone}</p>}
         </div>
       )}
     </>
@@ -431,11 +485,11 @@ function Dob({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; upd
     <>
       <H heading={heading}>{p.filledBy === "self" ? c.dob.titleSelf : c.dob.title}</H>
       <fieldset className="mt-4" aria-labelledby={`${ns}step-heading`} aria-describedby={`${ns}dob-hint${error ? ` ${ns}dob-error` : ""}`}>
-        <p id={`${ns}dob-hint`} className="text-[15px] text-muted">
+        <p id={`${ns}dob-hint`} className="text-base text-care-gray_dark">
           {c.dob.hint}
         </p>
         {error && (
-          <p id={`${ns}dob-error`} className="mt-1.5 flex items-start gap-1.5 text-[15px] font-semibold text-danger">
+          <p id={`${ns}dob-error`} className="mt-1.5 flex items-start gap-1.5 text-base font-semibold text-red-800">
             <Icon name="alert" className="mt-0.5 h-4 w-4 flex-none" />
             {error}
           </p>
@@ -443,7 +497,7 @@ function Dob({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; upd
         <div className="mt-2 flex gap-3">
           {(["month", "day", "year"] as const).map((k) => (
             <div key={k} className={k === "year" ? "w-28" : "w-20"}>
-              <label htmlFor={`${ns}dob-${k}`} className="block text-[15px] font-semibold">
+              <label htmlFor={`${ns}dob-${k}`} className="block text-base font-semibold">
                 {c.dob[k]}
               </label>
               <input
@@ -453,7 +507,7 @@ function Dob({ c, p, update, errorFor, heading }: { c: Copy; p: Participant; upd
                 value={parts[k]}
                 onChange={(e) => set(k, e.target.value)}
                 aria-invalid={error ? true : undefined}
-                className={`mt-1 block min-h-12 w-full rounded border bg-white p-3 text-[18px] leading-[1.2] ${error ? "border-2 border-danger" : "border-control"}`}
+                className={`mt-1 block min-h-12 w-full rounded border bg-white p-3 text-lg leading-[1.2] ${error ? "border-2 border-red-800" : "border-care-motion600"}`}
               />
             </div>
           ))}
@@ -485,7 +539,7 @@ function Health({
   const set = (v: string | string[]) => update((x) => ({ ...x, answers: { ...x.answers, [field]: v } }));
   const why = n > 0 ? c.health.why(n) : undefined;
   const value = p.answers[field as keyof Participant["answers"]] as string | string[] | undefined;
-  const intro = first ? <p className="mb-4 rounded-[14px] bg-ivory p-4 text-[15px] leading-6">{c.health.intro}</p> : null;
+  const intro = first ? <p className="mb-4 rounded-2xl bg-care-ivory p-4 text-base leading-6">{c.health.intro}</p> : null;
   if (field === "heart" || field === "kidney") {
     const opts = c.health[field].options as Record<string, string>;
     return (
@@ -553,7 +607,7 @@ function Review({ c, p, heading }: { c: Copy; p: Participant; heading: React.Ref
   const rows: { k: string; v: string; go: Screen }[] = [
     { k: c.review.site, v: s ? `${s.name}, ${s.area}` : "", go: "where" },
     { k: c.review.when, v: p.slot ? fmtSlot(p.slot, p.lang) : "", go: "time" },
-    { k: c.review.who, v: p.filledBy === "self" ? c.who.self : p.filledBy === "lar" ? c.who.lar : c.who.helping, go: "who" },
+    { k: c.review.who, v: p.filledBy === "self" ? c.who.self : p.filledBy === "lar" ? `${c.who.lar}: ${p.rep?.name ?? ""}` : c.who.helping, go: "who" },
     { k: c.review.dob, v: p.dob && validDob(p.dob) ? fmtDob(p.dob, p.lang) : "", go: "dob" },
     {
       k: c.review.choices,
@@ -575,13 +629,13 @@ function Review({ c, p, heading }: { c: Copy; p: Participant; heading: React.Ref
   return (
     <>
       <H heading={heading}>{c.review.title}</H>
-      <dl className="mt-4 divide-y divide-line rounded-[16px] border border-line bg-white">
+      <dl className="mt-4 divide-y divide-care-borderColor rounded-2xl border border-care-borderColor bg-white">
         {rows.map((r) => (
           <div key={r.k} className="px-4 py-3">
-            <dt className="text-[14px] font-medium text-muted">{r.k}</dt>
+            <dt className="text-sm font-medium text-care-gray_dark">{r.k}</dt>
             <dd className="mt-0.5 flex items-start justify-between gap-3">
-              <span className="min-w-0 whitespace-pre-line text-[16px] leading-6">{r.v}</span>
-              <button type="button" className="-mt-2 min-h-11 flex-none rounded-full px-2 text-[15px] text-cta underline underline-offset-4" onClick={() => dispatch({ type: "go", screen: r.go })}>
+              <span className="min-w-0 whitespace-pre-line text-base leading-6">{r.v}</span>
+              <button type="button" className="-mt-2 min-h-11 flex-none rounded-full px-2 text-base text-care-ctaDefault underline underline-offset-4" onClick={() => dispatch({ type: "go", screen: r.go })}>
                 {c.change}
                 <span className="sr-only">: {r.k}</span>
               </button>

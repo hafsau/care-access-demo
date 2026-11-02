@@ -3,8 +3,8 @@
  * phone writes it, and the coordinator's view reads it once she books. Before
  * she books, nothing leaves her phone, so staff see nothing.
  */
-import { ageOn, evaluateAll, type Answers, type Lang } from "./rules/engine";
-import { CONSENT_VERSION, NO_CHOICES, type Choice, type ConsentEvent, type ConsentState } from "./consent";
+import { ageOn, evaluateAll, type Answers, type Lang, type Tri } from "./rules/engine";
+import { CONSENT_VERSION, NO_CHOICES, type Choice, type ConsentBy, type ConsentEvent, type ConsentState } from "./consent";
 
 /** The demo's clock. Fixed, so tests and screenshots are repeatable. */
 export const TODAY = "2026-11-02";
@@ -39,7 +39,8 @@ export function sitesNear(zip: string): Site[] {
   return ["90022", "90023", "90063", "90640"].includes(zip) ? SITES : [];
 }
 
-export type FilledBy = "self" | "helper" | "lar";
+/** "other" means booking for someone else, before saying how: never a default for the legal role. */
+export type FilledBy = "self" | "other" | "helper" | "lar";
 export type BestTime = "morning" | "afternoon" | "evening";
 
 export type Participant = {
@@ -48,6 +49,8 @@ export type Participant = {
   zip: string;
   siteId?: string;
   filledBy?: FilledBy;
+  rep?: { name: string; relationship: string; phone: string }; // when a legally authorized representative books
+  callLang?: Lang; // asked when someone else fills it in; otherwise the language she used
   dob?: string; // YYYY-MM-DD
   answers: Omit<Answers, "age">; // matching answers, only if she said yes to matching
   consent: ConsentState;
@@ -57,6 +60,8 @@ export type Participant = {
   slot?: string;
   bookedAt?: string;
   calls: CallAttempt[];
+  wrongNumber?: boolean; // set by a "wrong number" call outcome
+  callAnswers: Record<string, Tri>; // criteria confirmed on a call, keyed "STUDY:criterion"
 };
 
 export type Disposition = "reached" | "voicemail" | "noAnswer" | "callBack" | "wrongNumber" | "declined";
@@ -73,6 +78,7 @@ export function emptyParticipant(lang: Lang = "en"): Participant {
     contact: { first: "", middle: "", last: "", phone: "", email: "", noEmail: false },
     about: { race: [] },
     calls: [],
+    callAnswers: {},
   };
 }
 
@@ -92,14 +98,22 @@ export function site(p: Participant) {
 export function matches(p: Participant, amendments: string[] = []) {
   const s = site(p);
   if (!s || p.consent.matching !== true) return [];
-  return evaluateAll(s.studies, matchAnswers(p), amendments);
+  return evaluateAll(s.studies, matchAnswers(p), amendments, p.callAnswers);
 }
 
-export function setChoice(p: Participant, choice: Choice, value: boolean, at: string, by: "participant" | "staff" = "participant"): Participant {
-  const event: ConsentEvent = { at, choice, value, by, lang: p.lang, version: CONSENT_VERSION };
+/** Who is making a choice right now: a representative's choices are logged as theirs, with their name. */
+export function chooser(p: Participant): { by: ConsentBy; name?: string } {
+  return p.filledBy === "lar" ? { by: "representative", name: p.rep?.name || undefined } : { by: "participant" };
+}
+
+export function setChoice(p: Participant, choice: Choice, value: boolean, at: string, by: { by: ConsentBy; name?: string } = chooser(p)): Participant {
+  const event: ConsentEvent = { at, choice, value, ...by, lang: p.lang, version: CONSENT_VERSION };
   const next = { ...p, consent: { ...p.consent, [choice]: value }, consentLog: [...p.consentLog, event] };
   // Stopping study matching drops the matching answers: they were only collected for it.
-  if (choice === "matching" && value === false) next.answers = {};
+  if (choice === "matching" && value === false) {
+    next.answers = {};
+    next.callAnswers = {};
+  }
   return next;
 }
 
@@ -153,7 +167,7 @@ function booked(partial: Partial<Participant> & { id: string; first: string; las
     siteId: "maple",
     contact: { first: partial.first, middle: "", last: partial.last, phone: "(323) 555-01" + partial.id.slice(-2), sharedPhone: false, voicemail: true, bestTime: "afternoon", email: "", noEmail: false, ...partial.contact },
   } as Participant;
-  for (const [c, v] of Object.entries(choices) as [Choice, boolean][]) p = setChoice(p, c, v, "2026-10-30T15:10");
+  for (const [c, v] of Object.entries(choices) as [Choice, boolean][]) p = setChoice(p, c, v, partial.bookedAt ?? "2026-10-30T15:10");
   p.answers = partial.answers ?? p.answers;
   if (choices.matching === false) p.answers = {};
   return p;
@@ -184,7 +198,18 @@ export const QUEUE: Participant[] = [
     { screening: true, matching: true, texts: true, autoVoice: false, news: false },
   ),
   booked(
-    { id: "CA-24112", first: "Walter", last: "Brooks", lang: "en", dob: "1953-02-17", filledBy: "lar", answers: { heart: ["stroke"], kidney: ["none"], cancer5y: "no" }, slot: "2026-11-15T11:20", bookedAt: "2026-11-02T11:30" },
+    {
+      id: "CA-24112",
+      first: "Walter",
+      last: "Brooks",
+      lang: "en",
+      dob: "1953-02-17",
+      filledBy: "lar",
+      rep: { name: "Denise Brooks", relationship: "Daughter, health care power of attorney", phone: "(323) 555-0177" },
+      answers: { heart: ["stroke"], kidney: ["none"], cancer5y: "no" },
+      slot: "2026-11-15T11:20",
+      bookedAt: "2026-11-02T11:30",
+    },
     { screening: true, matching: true, texts: false, autoVoice: false, news: false },
   ),
 ];

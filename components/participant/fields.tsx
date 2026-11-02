@@ -54,21 +54,21 @@ export function OptionList({
   const describedBy = [hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined;
   return (
     <fieldset id={ns + name} aria-labelledby={labelledBy ? ns + labelledBy : undefined} aria-describedby={describedBy} aria-invalid={error ? true : undefined}>
-      {legend && <legend className={legendAs === "h2" ? "display text-[28px]" : "text-[18px] font-medium leading-snug text-dusk"}>{legend}</legend>}
+      {legend && <legend className={legendAs === "h2" ? "display text-3xl" : "text-lg font-medium leading-snug text-care-dusk"}>{legend}</legend>}
       {hint && (
-        <p id={`${id}-hint`} className="mt-1.5 text-[15px] text-muted">
+        <p id={`${id}-hint`} className="mt-1.5 text-base text-care-gray_dark">
           {hint}
         </p>
       )}
       {error && <FieldError id={`${id}-error`}>{error}</FieldError>}
-      <div className={`mt-2 flex flex-col gap-0.5 ${error ? "border-l-4 border-danger pl-3" : ""}`}>
+      <div className={`mt-2 flex flex-col gap-0.5 ${error ? "border-l-4 border-red-800 pl-3" : ""}`}>
         {options.map((o, i) => {
           const on = selected.includes(o.value);
           const ex = exclusive.includes(o.value);
           return (
             <label
               key={o.value}
-              className={`flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-boots hover:bg-gray-light ${on ? "bg-grace-light" : ""} ${ex && i > 0 && !exclusive.includes(options[i - 1].value) ? "mt-2 border-t border-line pt-3" : ""}`}
+              className={`flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-care-boots hover:bg-care-gray_light ${on ? "bg-care-grace_light" : ""} ${ex && i > 0 && !exclusive.includes(options[i - 1].value) ? "mt-2 border-t border-care-borderColor pt-3" : ""}`}
             >
               <input
                 type={multiple ? "checkbox" : "radio"}
@@ -76,11 +76,11 @@ export function OptionList({
                 value={o.value}
                 checked={on}
                 onChange={() => toggle(o.value)}
-                className="h-5 w-5 flex-none translate-y-[3px] accent-[var(--care-dusk)]"
+                className="h-5 w-5 flex-none translate-y-[3px] accent-care-dusk"
               />
               <span className="min-w-0">
-                <span className="block text-[18px] leading-[1.35]">{o.label}</span>
-                {o.hint && <span className="mt-0.5 block text-[15px] leading-5 text-muted">{o.hint}</span>}
+                <span className="block text-lg leading-[1.35]">{o.label}</span>
+                {o.hint && <span className="mt-0.5 block text-base leading-5 text-care-gray_dark">{o.hint}</span>}
               </span>
             </label>
           );
@@ -112,12 +112,12 @@ export function TextField({
   const describedBy = [hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined;
   return (
     <div>
-      <label htmlFor={id} className="block text-[15px] font-medium text-dusk">
+      <label htmlFor={id} className="block text-base font-medium text-care-dusk">
         {label}
-        {optional && <span className="font-normal text-muted"> ({optional})</span>}
+        {optional && <span className="font-normal text-care-gray_dark"> ({optional})</span>}
       </label>
       {hint && (
-        <p id={`${id}-hint`} className="mt-0.5 text-[14px] text-muted">
+        <p id={`${id}-hint`} className="mt-0.5 text-sm text-care-gray_dark">
           {hint}
         </p>
       )}
@@ -128,7 +128,7 @@ export function TextField({
         onChange={(e) => onChange(e.target.value)}
         aria-describedby={describedBy}
         aria-invalid={error ? true : undefined}
-        className={`mt-1 block min-h-12 w-full rounded border bg-white p-3 text-[18px] leading-[1.2] ${error ? "border-2 border-danger" : "border-control"}`}
+        className={`mt-1 block min-h-12 w-full rounded border bg-white p-3 text-lg leading-[1.2] ${error ? "border-2 border-red-800" : "border-care-motion600"}`}
         {...rest}
       />
     </div>
@@ -137,7 +137,7 @@ export function TextField({
 
 export function FieldError({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <p id={id} className="mt-1.5 flex items-start gap-1.5 text-[15px] font-semibold text-danger">
+    <p id={id} className="mt-1.5 flex items-start gap-1.5 text-base font-semibold text-red-800">
       <Icon name="alert" className="mt-0.5 h-4 w-4 flex-none" />
       {children}
     </p>
@@ -149,16 +149,16 @@ export function ErrorSummary({ title, items, summaryRef }: { title: string; item
   const ns = useScope();
   if (!items.length) return null;
   return (
-    <div ref={summaryRef} tabIndex={-1} role="alert" aria-labelledby={`${ns}error-summary-title`} className="mb-5 rounded-[14px] border-2 border-danger bg-danger-bg p-4">
-      <h3 id={`${ns}error-summary-title`} className="text-[16px] font-semibold text-danger">
+    <div ref={summaryRef} tabIndex={-1} role="alert" aria-labelledby={`${ns}error-summary-title`} className="mb-5 rounded-2xl border-2 border-red-800 bg-red-50 p-4">
+      <h3 id={`${ns}error-summary-title`} className="text-base font-semibold text-red-800">
         {title}
       </h3>
-      <ul className="mt-2 list-disc pl-5 text-[15px]">
+      <ul className="mt-2 list-disc pl-5 text-base">
         {items.map((it) => (
           <li key={it.field + it.text}>
             <a
               href={`#${ns}${it.field}`}
-              className="link text-danger"
+              className="link text-red-800"
               onClick={(e) => {
                 e.preventDefault();
                 const el = document.getElementById(ns + it.field);

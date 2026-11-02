@@ -12,7 +12,7 @@ export function PrescreenPage({ lang }: { lang?: Lang }) {
     if (lang && screen === "intro" && p.lang !== lang) dispatch({ type: "lang", lang });
   }, [lang, screen, p.lang, dispatch]);
   return (
-    <div className="min-h-[70vh] bg-background">
+    <div className="min-h-[70vh] bg-care-background">
       <ParticipantFlow />
     </div>
   );

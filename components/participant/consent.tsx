@@ -19,11 +19,11 @@ export function ConsentStep({ c, p, errorFor, heading }: { c: Copy; p: Participa
   const choose = (choice: Choice, value: boolean) => dispatch({ type: "choose", choice, value });
   return (
     <>
-      <h2 ref={heading} tabIndex={-1} id={`${ns}step-heading`} className="display text-[30px] text-dusk sm:text-[34px]">
+      <h2 ref={heading} tabIndex={-1} id={`${ns}step-heading`} className="display text-3xl text-care-dusk sm:text-4xl">
         {c.choices.title}
       </h2>
-      <p className="mt-3 text-[17px] leading-7">{c.choices.intro}</p>
-      <p lang="en" className="mt-3 flex items-start gap-1.5 rounded-[5px] bg-ivory px-3 py-2 text-[13px] leading-5 text-muted">
+      <p className="mt-3 text-lg leading-7">{c.choices.intro}</p>
+      <p lang="en" className="mt-3 flex items-start gap-1.5 rounded-md bg-care-ivory px-3 py-2 text-sm leading-5 text-care-gray_dark">
         <Icon name="info" className="mt-0.5 h-3.5 w-3.5 flex-none" />
         Wording proposed for this concept, pending legal and regulatory review. Not study informed consent.
       </p>
@@ -31,7 +31,7 @@ export function ConsentStep({ c, p, errorFor, heading }: { c: Copy; p: Participa
       <div className="mt-5 flex flex-col gap-4">
         <ChoiceCard c={c} choice="screening" required>
           {errorFor("choice-screening") && <FieldError id={`${ns}choice-screening-error`}>{errorFor("choice-screening")}</FieldError>}
-          <label className={`mt-3 flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-boots hover:bg-gray-light ${p.consent.screening ? "bg-grace-light" : ""}`}>
+          <label className={`mt-3 flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-care-boots hover:bg-care-gray_light ${p.consent.screening ? "bg-care-grace_light" : ""}`}>
             <input
               id={`${ns}choice-screening`}
               type="checkbox"
@@ -39,9 +39,9 @@ export function ConsentStep({ c, p, errorFor, heading }: { c: Copy; p: Participa
               onChange={(e) => choose("screening", e.target.checked)}
               aria-describedby={`${ns}choice-screening-summary${errorFor("choice-screening") ? ` ${ns}choice-screening-error` : ""}`}
               aria-invalid={errorFor("choice-screening") ? true : undefined}
-              className="h-5 w-5 flex-none translate-y-[3px] accent-[var(--care-dusk)]"
+              className="h-5 w-5 flex-none translate-y-[3px] accent-care-dusk"
             />
-            <span className="text-[18px] leading-[1.35]">{c.choices.screening.on}</span>
+            <span className="text-lg leading-[1.35]">{c.choices.screening.on}</span>
           </label>
         </ChoiceCard>
 
@@ -62,15 +62,15 @@ export function ConsentStep({ c, p, errorFor, heading }: { c: Copy; p: Participa
         ))}
 
         <ChoiceCard c={c} choice="news">
-          <label className={`mt-3 flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-boots hover:bg-gray-light ${p.consent.news ? "bg-grace-light" : ""}`}>
-            <input type="checkbox" checked={p.consent.news === true} onChange={(e) => choose("news", e.target.checked)} className="h-5 w-5 flex-none translate-y-[3px] accent-[var(--care-dusk)]" />
-            <span className="text-[18px] leading-[1.35]">
-              {c.choices.news.on} <span className="text-[15px] text-muted">({c.optional})</span>
+          <label className={`mt-3 flex min-h-12 cursor-pointer items-baseline gap-3 rounded px-2 py-[10px] text-care-boots hover:bg-care-gray_light ${p.consent.news ? "bg-care-grace_light" : ""}`}>
+            <input type="checkbox" checked={p.consent.news === true} onChange={(e) => choose("news", e.target.checked)} className="h-5 w-5 flex-none translate-y-[3px] accent-care-dusk" />
+            <span className="text-lg leading-[1.35]">
+              {c.choices.news.on} <span className="text-base text-care-gray_dark">({c.optional})</span>
             </span>
           </label>
         </ChoiceCard>
       </div>
-      <p className="mt-4 text-[15px] leading-6 text-muted">{c.choices.changeAnyTime}</p>
+      <p className="mt-4 text-base leading-6 text-care-gray_dark">{c.choices.changeAnyTime}</p>
     </>
   );
 }
@@ -79,20 +79,20 @@ function ChoiceCard({ c, choice, required = false, children }: { c: Copy; choice
   const t = c.choices[choice];
   const ns = useScope();
   return (
-    <section aria-labelledby={`${ns}choice-${choice}-title`} className="rounded-[20px] border border-grace bg-white p-5">
-      <Chip className={required ? "bg-grace" : "bg-ivory"}>{required ? c.choices.required : c.choices.yourChoice}</Chip>
-      <h3 id={`${ns}choice-${choice}-title`} className="display mt-2 text-[21px] text-dusk">
+    <section aria-labelledby={`${ns}choice-${choice}-title`} className="rounded-[20px] border border-care-grace bg-white p-5">
+      <Chip className={required ? "bg-care-grace" : "bg-care-ivory"}>{required ? c.choices.required : c.choices.yourChoice}</Chip>
+      <h3 id={`${ns}choice-${choice}-title`} className="display mt-2 text-xl text-care-dusk">
         {t.title}
       </h3>
-      <p id={`${ns}choice-${choice}-summary`} className="mt-1.5 text-[16px] leading-6">
+      <p id={`${ns}choice-${choice}-summary`} className="mt-1.5 text-base leading-6">
         {t.summary}
       </p>
       <details className="group mt-2">
-        <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1 text-[15px] text-boots underline underline-offset-4">
+        <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1 text-base text-care-boots underline underline-offset-4">
           <Icon name="doc" className="h-4 w-4" />
           {c.choices.readFull}
         </summary>
-        <p className="mt-1 rounded-[5px] bg-background-light p-3 text-[14px] leading-6">{t.full}</p>
+        <p className="mt-1 rounded-md bg-care-background_light p-3 text-sm leading-6">{t.full}</p>
       </details>
       {children}
     </section>

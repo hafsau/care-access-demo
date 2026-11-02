@@ -4,32 +4,33 @@ import type { Tri } from "@/lib/rules/engine";
 /*
  * Class helpers and small primitives, following careaccess.com components.
  * Server-safe.
- *  - Buttons: pills, IBM Plex Sans 17px, 48px tall; primary is care-ctaDefault
- *    with white text, secondary is the form's light "Continue" pill.
+ *  - Buttons: pills, IBM Plex Sans semibold, 48px tall; primary is the live
+ *    CTA's care-motion600 with white text (4.5:1), secondary is the form's
+ *    light "Continue" pill.
  *  - Cards: white, 1px care-grace border, 20px corners, 24px padding.
  *  - Chips: care-grace fill, dusk text, 14px.
  */
 
 export function btn(kind: "primary" | "dusk" | "secondary" | "outline" | "ghost" = "primary", size: "md" | "sm" = "md") {
-  const base = "inline-flex items-center justify-center gap-2 rounded-full whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50";
-  const sizes = { md: "min-h-12 px-6 text-[17px]", sm: "min-h-11 px-4 text-[15px]" };
+  const base = "inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+  const sizes = { md: "min-h-12 px-6 text-lg", sm: "min-h-11 px-4 text-base" };
   const kinds = {
-    primary: "bg-cta text-white hover:bg-boots",
-    dusk: "bg-dusk text-white hover:bg-boots",
-    secondary: "bg-gray-light text-dusk hover:bg-ivory",
-    outline: "border border-dusk bg-white text-dusk hover:bg-gray-light",
-    ghost: "text-dusk underline underline-offset-4 hover:decoration-2",
+    primary: "bg-care-motion600 text-white hover:bg-care-ctaDefault",
+    dusk: "bg-care-dusk text-white hover:bg-care-boots",
+    secondary: "bg-care-gray_light text-care-dusk hover:bg-care-ivory",
+    outline: "border border-care-dusk bg-white text-care-dusk hover:bg-care-gray_light",
+    ghost: "text-care-dusk underline underline-offset-4 hover:decoration-2",
   };
   return `${base} ${sizes[size]} ${kinds[kind]}`;
 }
 
 export function Card({ className = "", children, tone = "white" }: { className?: string; children: ReactNode; tone?: "white" | "ivory" | "grace" }) {
-  const bg = { white: "border border-grace bg-white", ivory: "bg-ivory", grace: "bg-grace-light" }[tone];
+  const bg = { white: "border border-care-grace bg-white", ivory: "bg-care-ivory", grace: "bg-care-grace_light" }[tone];
   return <div className={`rounded-[20px] ${bg} ${className}`}>{children}</div>;
 }
 
 export function Chip({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <span className={`inline-flex items-center gap-1 rounded bg-grace px-2 py-0.5 text-[14px] text-dusk ${className}`}>{children}</span>;
+  return <span className={`inline-flex items-center gap-1 rounded bg-care-grace px-2 py-0.5 text-sm text-care-dusk ${className}`}>{children}</span>;
 }
 
 export type IconName = "check" | "x" | "question" | "phone" | "phone-off" | "message" | "message-off" | "robot" | "lock" | "pin" | "clock" | "user" | "users" | "globe" | "arrow" | "back" | "alert" | "doc" | "voicemail" | "flask" | "info" | "play" | "pause" | "refresh" | "spark";
@@ -73,12 +74,12 @@ export function Icon({ name, className = "h-5 w-5" }: { name: IconName; classNam
 /** Met / not met / not known yet. Shape and words carry the meaning, color only reinforces it. */
 export function TriBadge({ result, children }: { result: Tri; children?: ReactNode }) {
   const style = {
-    met: { cls: "bg-met-bg text-met", icon: "check" as const, label: "Met" },
-    notMet: { cls: "bg-not-bg text-not", icon: "x" as const, label: "Not met" },
-    unknown: { cls: "bg-unknown-bg text-unknown border border-dashed border-control", icon: "question" as const, label: "Not known yet" },
+    met: { cls: "bg-care-grace_light text-care-ctaDefault", icon: "check" as const, label: "Met" },
+    notMet: { cls: "bg-care-white text-care-sunset border border-care-sunset", icon: "x" as const, label: "Not met" },
+    unknown: { cls: "bg-care-ivory text-care-dusk border border-dashed border-care-motion600", icon: "question" as const, label: "Not known yet" },
   }[result];
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[13px] font-semibold ${style.cls}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-semibold ${style.cls}`}>
       <Icon name={style.icon} className="h-3.5 w-3.5" />
       {children ?? style.label}
     </span>
@@ -86,5 +87,5 @@ export function TriBadge({ result, children }: { result: Tri; children?: ReactNo
 }
 
 export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <p className={`text-[13px] font-semibold uppercase tracking-[0.08em] text-sunset ${className}`}>{children}</p>;
+  return <p className={`text-sm font-semibold uppercase tracking-[0.08em] text-care-sunset ${className}`}>{children}</p>;
 }

@@ -29,8 +29,8 @@ const EXAMPLES: Example[] = [
   {
     id: "lar",
     title: "Filling it in for someone else",
-    why: "Asked first, for everyone, instead of only after a dementia answer. A representative is told what to bring.",
-    init: { screen: "who", p: base({ filledBy: "lar" }) },
+    why: "Asked first, for everyone. The role is chosen, never defaulted; a representative gives their own name and number, and their choices are logged as theirs.",
+    init: { screen: "who", p: base({ filledBy: "lar", rep: { name: "Denise Brooks", relationship: "Daughter, health care power of attorney", phone: "(323) 555-0177" } }) },
   },
   {
     id: "under-18",
@@ -79,8 +79,13 @@ const EXAMPLES: Example[] = [
       },
     },
   },
-  { id: "timeout", title: "Session timeout", why: "Answers stay on the phone for 30 minutes, and she's asked before anything is cleared.", render: <Dialog kind="timeout" /> },
-  { id: "resume", title: "Coming back later", why: "Saved on her phone only, never sent until she books.", render: <Dialog kind="resume" /> },
+  { id: "timeout", title: "Session timeout (sketch)", why: "Answers stay on the phone for 30 minutes, and nothing is cleared without asking. Not wired up in this demo.", render: <Dialog kind="timeout" /> },
+  {
+    id: "resume",
+    title: "Coming back later (sketch)",
+    why: "Saved on the phone only, never sent until booking. On a phone marked as shared, health answers wouldn't be kept. Not wired up in this demo.",
+    render: <Dialog kind="resume" />,
+  },
   { id: "sms", title: "Future state: an automated reminder text", why: "Only with a yes to texts. Says it's automated, never includes health details, and offers a person and STOP.", render: <Sms /> },
 ];
 
@@ -94,18 +99,18 @@ export function StatesGallery() {
   return (
     <div className="mx-auto max-w-[1320px] px-4 py-8 sm:px-6">
       <Eyebrow>States and edge cases</Eyebrow>
-      <h1 className="display mt-1 text-[36px] text-dusk">Everything that isn&apos;t the happy path</h1>
-      <p className="mt-2 max-w-2xl text-[16px] leading-7">Each example runs the real components with its own record, so what you see here is what ships. Spanish examples are drafts pending native-speaker review.</p>
+      <h1 className="display mt-1 text-4xl text-care-dusk">Everything that isn&apos;t the happy path</h1>
+      <p className="mt-2 max-w-2xl text-base leading-7">Each example runs the real components with its own record, so what you see here is what ships. Spanish examples are drafts pending native-speaker review.</p>
 
-      <h2 className="display mt-10 text-[26px]">On her phone</h2>
+      <h2 className="display mt-10 text-3xl">On her phone</h2>
       <div className="mt-4 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {EXAMPLES.map((e) => (
           <figure key={e.id} id={e.id} className="flex min-w-0 flex-col">
             <figcaption className="mb-3">
-              <span className="block text-[17px] font-semibold">{e.title}</span>
-              <span className="mt-0.5 block text-[15px] leading-6 text-muted">{e.why}</span>
+              <span className="block text-lg font-semibold">{e.title}</span>
+              <span className="mt-0.5 block text-base leading-6 text-care-gray_dark">{e.why}</span>
             </figcaption>
-            <div className="h-[600px] overflow-y-auto rounded-[28px] border-[8px] border-dusk bg-background">
+            <div className="h-[600px] overflow-y-auto rounded-[28px] border-[8px] border-care-dusk bg-care-background">
               {e.render ?? (
                 <Scope.Provider value={`${e.id}-`}>
                   <StoreProvider init={e.init}>
@@ -118,13 +123,13 @@ export function StatesGallery() {
         ))}
       </div>
 
-      <h2 className="display mt-12 text-[26px]">On the coordinator&apos;s screen</h2>
+      <h2 className="display mt-12 text-3xl">On the coordinator&apos;s screen</h2>
       <div className="mt-4 grid gap-6 xl:grid-cols-3">
         {STAFF.map((s) => (
           <figure key={s.id} id={s.id} className="min-w-0">
             <figcaption className="mb-3">
-              <span className="block text-[17px] font-semibold">{s.title}</span>
-              <span className="mt-0.5 block text-[15px] leading-6 text-muted">{s.why}</span>
+              <span className="block text-lg font-semibold">{s.title}</span>
+              <span className="mt-0.5 block text-base leading-6 text-care-gray_dark">{s.why}</span>
             </figcaption>
             <StoreProvider init={{ queue: [s.record] }}>
               <CoordinatorRecord p={s.record} compact />
@@ -139,17 +144,17 @@ export function StatesGallery() {
 function Dialog({ kind }: { kind: "timeout" | "resume" }) {
   const c = COPY.en.states;
   return (
-    <div className="relative h-full bg-dusk/50 p-5">
+    <div className="relative h-full bg-care-dusk/50 p-5">
       <div role="dialog" aria-modal="false" aria-labelledby={`dlg-${kind}`} className="mt-24 rounded-[20px] bg-white p-5 shadow-sm">
-        <h3 id={`dlg-${kind}`} className="display text-[24px]">
+        <h3 id={`dlg-${kind}`} className="display text-2xl">
           {kind === "timeout" ? c.timeoutTitle : c.resumeTitle}
         </h3>
-        <p className="mt-2 text-[16px] leading-6">{kind === "timeout" ? c.timeoutBody : c.resumeBody}</p>
+        <p className="mt-2 text-base leading-6">{kind === "timeout" ? c.timeoutBody : c.resumeBody}</p>
         <div className="mt-4 flex flex-col gap-2">
-          <button type="button" className="min-h-12 rounded-full bg-cta px-6 text-[17px] text-white">
+          <button type="button" className="min-h-12 rounded-full bg-care-ctaDefault px-6 text-lg text-white">
             {kind === "timeout" ? c.keepGoing : c.resume}
           </button>
-          <button type="button" className="min-h-12 rounded-full bg-gray-light px-6 text-[17px] text-dusk">
+          <button type="button" className="min-h-12 rounded-full bg-care-gray_light px-6 text-lg text-care-dusk">
             {c.startOver}
           </button>
         </div>
@@ -161,16 +166,16 @@ function Dialog({ kind }: { kind: "timeout" | "resume" }) {
 function Sms() {
   return (
     <div lang="es" className="flex h-full flex-col bg-white">
-      <div className="border-b border-line px-4 py-3 text-center">
-        <p className="text-[15px] font-semibold">Care Access</p>
-        <p className="text-[12px] text-muted">Mensaje de texto</p>
+      <div className="border-b border-care-borderColor px-4 py-3 text-center">
+        <p className="text-base font-semibold">Care Access</p>
+        <p className="text-xs text-care-gray_dark">Mensaje de texto</p>
       </div>
       <div className="flex-1 p-4">
-        <p className="max-w-[85%] rounded-[18px] rounded-bl-[4px] bg-gray-light px-4 py-3 text-[15px] leading-6">
+        <p className="max-w-[85%] rounded-[18px] rounded-bl-[4px] bg-care-gray_light px-4 py-3 text-base leading-6">
           Care Access (mensaje automático): Recordatorio de su chequeo gratis el sábado 14 de noviembre a las 9:20 a.m. en Maple Street Community Center. Responda 1 para hablar con una persona. Responda STOP para no recibir más
           textos.
         </p>
-        <p lang="en" className="mt-4 flex items-start gap-1.5 rounded-[5px] bg-ivory p-3 text-[13px] leading-5 text-muted">
+        <p lang="en" className="mt-4 flex items-start gap-1.5 rounded-md bg-care-ivory p-3 text-sm leading-5 text-care-gray_dark">
           <Icon name="info" className="mt-0.5 h-3.5 w-3.5 flex-none" />
           Future-state sketch, not built. Sent only with a yes to texts, in her language, with no health details.
         </p>

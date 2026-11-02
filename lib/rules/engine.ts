@@ -67,7 +67,7 @@ export function evaluate(c: Criterion, answers: Answers): Tri {
   return p ? "notMet" : "met";
 }
 
-export type CriterionResult = Criterion & { result: Tri; source?: { field: MatchField; value: unknown } };
+export type CriterionResult = Criterion & { result: Tri; confirmedOnCall?: boolean; source?: { field: MatchField; value: unknown } };
 export type StudyStatus = "possible" | "notAMatch";
 export type StudyResult = { study: Study; status: StudyStatus; criteria: CriterionResult[]; met: number; notMet: number; unknown: number };
 
@@ -76,18 +76,20 @@ export function criteriaFor(study: Study, amendments: string[] = []): Criterion[
   return [...study.criteria, ...study.amendments.filter((a) => amendments.includes(a.id)).map((a) => a.criterion)];
 }
 
-export function evaluateStudy(study: Study, answers: Answers, amendments: string[] = []): StudyResult {
+/** `confirmed` holds answers a coordinator recorded on a call, keyed "STUDY:criterion"; they settle criteria the form couldn't. */
+export function evaluateStudy(study: Study, answers: Answers, amendments: string[] = [], confirmed: Record<string, Tri> = {}): StudyResult {
   const criteria = criteriaFor(study, amendments).map((c) => ({
     ...c,
-    result: evaluate(c, answers),
+    result: confirmed[`${study.id}:${c.id}`] ?? evaluate(c, answers),
+    confirmedOnCall: confirmed[`${study.id}:${c.id}`] !== undefined,
     source: c.field && answers[c.field] !== undefined ? { field: c.field, value: answers[c.field] } : undefined,
   }));
   const count = (t: Tri) => criteria.filter((c) => c.result === t).length;
   return { study, status: count("notMet") > 0 ? "notAMatch" : "possible", criteria, met: count("met"), notMet: count("notMet"), unknown: count("unknown") };
 }
 
-export function evaluateAll(studyIds: string[], answers: Answers, amendments: string[] = []): StudyResult[] {
-  return STUDIES.filter((s) => studyIds.includes(s.id)).map((s) => evaluateStudy(s, answers, amendments));
+export function evaluateAll(studyIds: string[], answers: Answers, amendments: string[] = [], confirmed: Record<string, Tri> = {}): StudyResult[] {
+  return STUDIES.filter((s) => studyIds.includes(s.id)).map((s) => evaluateStudy(s, answers, amendments, confirmed));
 }
 
 /**

@@ -43,7 +43,8 @@ const en = {
     noneTitle: "There's no screening near you yet",
     noneBody: "We add new sites often. We can let you know when one is scheduled near you.",
     noneAction: "Tell me when there's one near me",
-    noneDone: "Thanks. We'll text or call you when there's a screening near you. Nothing else will be sent.",
+    noneOptIn: "Text me once when there's a screening near me. Nothing else.",
+    noneDone: "Thanks. We'll text you once when there's a screening near you. Nothing else will be sent.",
   },
 
   who: {
@@ -58,6 +59,16 @@ const en = {
     larNote: "Please come with them to the screening, and bring the paperwork that shows you can make medical decisions for them.",
     helpingNote: "Read each question to them, and enter their answers. The choices on the next pages are theirs to make.",
     error: "Choose who the screening is for",
+    roleError: "Choose how you're helping them",
+    repName: "Your full name",
+    repRelationship: "Your relationship to them",
+    repRelationshipHint: "For example, daughter with health care power of attorney.",
+    repPhone: "Your phone number",
+    repPhoneHint: "We'll call you, not them, about the screening.",
+    repError: "Enter your name and a 10-number phone number",
+    callLang: "Which language should we use when we call?",
+    answerAs: "You're answering for the person you're booking for. On these pages, \"you\" and \"your\" mean them.",
+    helperBanner: "Read each question to them and enter their answers. These choices are theirs to make.",
   },
 
   dob: {
@@ -78,7 +89,7 @@ const en = {
     required: "Needed to book",
     yourChoice: "Your choice",
     readFull: "Read the full text",
-    changeAnyTime: "You can change this any time from your confirmation page, or by telling us on a call.",
+    changeAnyTime: "You can change these any time: on your confirmation page, by replying STOP to a text, or by calling (888) 555-0142.",
     pending: "Wording proposed for this concept. It would need legal review.",
     screening: {
       title: "Use my answers and blood test for my screening",
@@ -89,7 +100,7 @@ const en = {
     },
     matching: {
       title: "Check if I might fit a research study",
-      summary: "We compare your answers with studies near you. If you might fit one, we tell you about it, and share your answers with that study's team. You can still get your screening if you say no.",
+      summary: "We compare your answers and blood test results with studies near you. If you might fit one, we tell you about it, and share what's needed with that study's team. You can still get your screening if you say no.",
       full: "If you say yes, Care Access will compare your answers and your blood test results with the requirements of research studies enrolling near you. If you might qualify, a Care Access team member may contact you about the study, and Care Access may share the information needed to check if you qualify with the study team. Saying yes does not sign you up for a study. Joining a study always needs a separate consent with the study team. You can stop study matching at any time.",
       on: "Yes, check for studies",
       off: "No, just the screening",
@@ -97,7 +108,7 @@ const en = {
     },
     texts: {
       title: "Text messages",
-      summary: "Appointment reminders and updates by text. Message and data rates may apply. Reply STOP to stop.",
+      summary: "Texts about your appointment and results, and about studies if you said yes to study matching. Message and data rates may apply. Reply STOP to stop.",
       full: "If you say yes, Care Access may send automated text messages about your appointment, results and, if you said yes to study matching, studies you might fit, to the phone number you give. Message frequency varies. Message and data rates may apply. Reply STOP to stop at any time, or HELP for help. Saying yes is not required to get a screening.",
       on: "Yes, text me",
       off: "No texts",
@@ -113,12 +124,11 @@ const en = {
     },
     news: {
       title: "News and events",
-      summary: "Health tips and news about Care Access events, by email, call or text.",
-      full: "If you say yes, Care Access may contact you about events, updates, health tips, wellness resources and medicines by email, call or text. You can stop at any time.",
+      summary: "Health tips and news about Care Access events, by email, or by text if you said yes to texts.",
+      full: "If you say yes, Care Access may contact you about events, updates, health tips and wellness resources by email, or by text message if you also said yes to text messages. You can stop at any time.",
       on: "Yes, send me news",
       off: "No news",
     },
-    callLang: "Which language should we call you in?",
   },
 
   health: {
@@ -235,7 +245,7 @@ const en = {
     ],
     nextMatching: "If you might fit a study, we'll tell you about it on that call. You decide if you want to learn more.",
     receiptTitle: "Your choices",
-    receiptNote: (date: string) => `Saved ${date}. Change any of these here, any time.`,
+    receiptNote: (date: string) => `Saved ${date}. Change any of these here, or call (888) 555-0142.`,
     turnOff: "Turn off",
     turnOn: "Turn on",
     on: "On",
@@ -268,7 +278,7 @@ const es: Copy = {
   next: "Continuar",
   change: "Cambiar",
   optional: "opcional",
-  notSure: "No estoy seguro/a",
+  notSure: "No sé",
   noneOfThese: "Ninguno de estos",
   yes: "Sí",
   no: "No",
@@ -295,7 +305,8 @@ const es: Copy = {
     noneTitle: "Todavía no hay un chequeo cerca de usted",
     noneBody: "Agregamos lugares nuevos seguido. Podemos avisarle cuando haya uno cerca.",
     noneAction: "Avísenme cuando haya uno cerca",
-    noneDone: "Gracias. Le enviaremos un texto o le llamaremos cuando haya un chequeo cerca. No le enviaremos nada más.",
+    noneOptIn: "Envíenme un texto una vez cuando haya un chequeo cerca. Nada más.",
+    noneDone: "Gracias. Le enviaremos un texto una vez cuando haya un chequeo cerca. No le enviaremos nada más.",
   },
 
   who: {
@@ -310,6 +321,16 @@ const es: Copy = {
     larNote: "Por favor venga con esa persona al chequeo, y traiga los papeles que muestran que puede tomar decisiones médicas por ella.",
     helpingNote: "Léale cada pregunta y escriba sus respuestas. Las decisiones de las siguientes páginas son de esa persona.",
     error: "Elija para quién es el chequeo",
+    roleError: "Elija cómo le está ayudando",
+    repName: "Su nombre completo",
+    repRelationship: "Su relación con esa persona",
+    repRelationshipHint: "Por ejemplo, hija con poder legal para asuntos de salud.",
+    repPhone: "Su número de teléfono",
+    repPhoneHint: "Le llamaremos a usted, no a esa persona, sobre el chequeo.",
+    repError: "Escriba su nombre y un número de teléfono de 10 números",
+    callLang: "¿En qué idioma prefieren que llamemos?",
+    answerAs: "Está contestando por la persona para quien hace la cita. En estas páginas, \"usted\" y \"su\" se refieren a esa persona.",
+    helperBanner: "Léale cada pregunta y escriba sus respuestas. Estas decisiones son de esa persona.",
   },
 
   dob: {
@@ -330,7 +351,7 @@ const es: Copy = {
     required: "Necesario para la cita",
     yourChoice: "Usted decide",
     readFull: "Leer el texto completo",
-    changeAnyTime: "Puede cambiar esto cuando quiera desde su página de confirmación, o diciéndonos en una llamada.",
+    changeAnyTime: "Puede cambiar esto cuando quiera: en su página de confirmación, respondiendo STOP o ALTO a un texto, o llamando al (888) 555-0142.",
     pending: "Texto propuesto para este concepto. Necesitaría revisión legal.",
     screening: {
       title: "Usar mis respuestas y mi análisis de sangre para mi chequeo",
@@ -341,7 +362,7 @@ const es: Copy = {
     },
     matching: {
       title: "Ver si podría participar en un estudio",
-      summary: "Comparamos sus respuestas con estudios cerca de usted. Si podría participar en uno, le contamos sobre él y compartimos sus respuestas con el equipo de ese estudio. Puede hacerse el chequeo aunque diga que no.",
+      summary: "Comparamos sus respuestas y los resultados de su análisis con estudios cerca de usted. Si podría participar en uno, le contamos sobre él y compartimos lo necesario con el equipo de ese estudio. Puede hacerse el chequeo aunque diga que no.",
       full: "Si dice que sí, Care Access comparará sus respuestas y los resultados de su análisis de sangre con los requisitos de estudios de investigación cerca de usted. Si podría calificar, alguien del equipo de Care Access podría comunicarse con usted sobre el estudio, y Care Access podría compartir con el equipo del estudio la información necesaria para ver si califica. Decir que sí no le inscribe en un estudio. Participar en un estudio siempre necesita un consentimiento aparte con el equipo del estudio. Puede dejar la búsqueda de estudios en cualquier momento.",
       on: "Sí, busquen estudios",
       off: "No, solo el chequeo",
@@ -349,8 +370,8 @@ const es: Copy = {
     },
     texts: {
       title: "Mensajes de texto",
-      summary: "Recordatorios de su cita y avisos por texto. Pueden aplicar cargos por mensajes y datos. Responda STOP para dejar de recibirlos.",
-      full: "Si dice que sí, Care Access podría enviar mensajes de texto automáticos sobre su cita, sus resultados y, si dijo que sí a la búsqueda de estudios, estudios en los que podría participar, al número que nos dé. La frecuencia de los mensajes varía. Pueden aplicar cargos por mensajes y datos. Responda STOP para dejar de recibirlos en cualquier momento, o HELP para pedir ayuda. No es necesario decir que sí para hacerse el chequeo.",
+      summary: "Textos sobre su cita y sus resultados, y sobre estudios si dijo que sí a la búsqueda de estudios. Pueden aplicar cargos por mensajes y datos. Responda STOP o ALTO para dejar de recibirlos.",
+      full: "Si dice que sí, Care Access podría enviar mensajes de texto automáticos sobre su cita, sus resultados y, si dijo que sí a la búsqueda de estudios, estudios en los que podría participar, al número que nos dé. La frecuencia de los mensajes varía. Pueden aplicar cargos por mensajes y datos. Responda STOP o ALTO para dejar de recibirlos en cualquier momento, o HELP o AYUDA para pedir ayuda. No es necesario decir que sí para hacerse el chequeo.",
       on: "Sí, envíenme textos",
       off: "No quiero textos",
       error: "Mensajes de texto: elija sí o no",
@@ -365,16 +386,15 @@ const es: Copy = {
     },
     news: {
       title: "Noticias y eventos",
-      summary: "Consejos de salud y noticias sobre eventos de Care Access, por email, llamada o texto.",
-      full: "Si dice que sí, Care Access podría comunicarse con usted sobre eventos, novedades, consejos de salud, recursos de bienestar y medicamentos por email, llamada o texto. Puede dejar de recibirlos en cualquier momento.",
+      summary: "Consejos de salud y noticias sobre eventos de Care Access, por email, o por texto si dijo que sí a los textos.",
+      full: "Si dice que sí, Care Access podría comunicarse con usted sobre eventos, novedades, consejos de salud y recursos de bienestar por email, o por mensaje de texto si también dijo que sí a los textos. Puede dejar de recibirlos en cualquier momento.",
       on: "Sí, envíenme noticias",
       off: "No quiero noticias",
     },
-    callLang: "¿En qué idioma prefiere que le llamemos?",
   },
 
   health: {
-    intro: "Estas preguntas nos ayudan a buscar estudios cerca de usted. Conteste lo que sepa. \"No estoy seguro/a\" es una buena respuesta.",
+    intro: "Estas preguntas nos ayudan a buscar estudios cerca de usted. Conteste lo que sepa. \"No sé\" es una buena respuesta.",
     why: (studies) => (studies === 1 ? "Preguntamos porque 1 estudio cerca de usted lo necesita." : `Preguntamos porque ${studies} estudios cerca de usted lo necesitan.`),
     selectAll: "Elija todas las que correspondan",
     heart: {
@@ -408,14 +428,14 @@ const es: Copy = {
       options: { current: "Sí, ahora", past: "Antes sí", never: "Nunca" },
     },
     exclusive: "Esta respuesta no se puede combinar con otras",
-    error: "Elija una respuesta, o \"No estoy seguro/a\"",
+    error: "Elija una respuesta, o \"No sé\"",
   },
 
   contact: {
     title: "¿Cómo podemos comunicarnos con usted?",
     first: "Nombre",
     middle: "Segundo nombre",
-    last: "Apellido",
+    last: "Apellidos",
     phone: "Número de teléfono",
     phoneHint: "Le llamaremos a este número con sus resultados.",
     phoneError: "Escriba un número de teléfono de 10 números",
@@ -426,7 +446,7 @@ const es: Copy = {
     voicemailHint: "Solo diremos nuestro nombre y le pediremos que nos llame. Nunca detalles de salud.",
     voicemailError: "Díganos si podemos dejarle un mensaje de voz",
     bestTime: "Mejor hora para llamarle",
-    times: { morning: "Mañana (9–12)", afternoon: "Tarde (12–5)", evening: "Noche (5–8)" },
+    times: { morning: "Por la mañana (9 a 12)", afternoon: "Por la tarde (12 a 5)", evening: "Por la noche (5 a 8)" },
     email: "Email",
     noEmail: "No uso email",
     nameError: "Escriba su nombre y apellido",
@@ -487,7 +507,7 @@ const es: Copy = {
     ],
     nextMatching: "Si podría participar en un estudio, se lo diremos en esa llamada. Usted decide si quiere saber más.",
     receiptTitle: "Sus decisiones",
-    receiptNote: (date) => `Guardado el ${date}. Puede cambiar cualquiera de estas aquí, cuando quiera.`,
+    receiptNote: (date) => `Guardado el ${date}. Puede cambiar cualquiera de estas aquí, o llamar al (888) 555-0142.`,
     turnOff: "Desactivar",
     turnOn: "Activar",
     on: "Sí",

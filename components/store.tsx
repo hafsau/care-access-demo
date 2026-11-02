@@ -10,6 +10,7 @@ import type { Choice } from "@/lib/consent";
 import type { Lang } from "@/lib/rules/engine";
 import { steps, type StepId } from "@/lib/flow";
 import { CHOICE_ORDER, emptyParticipant, QUEUE, ROSA_INPUT, setChoice, TODAY, type CallAttempt, type Participant } from "@/lib/record";
+import type { Tri } from "@/lib/rules/engine";
 
 export type Screen = "intro" | StepId | "done" | "under18" | "noSite";
 
@@ -30,7 +31,7 @@ type Action =
   | { type: "go"; screen: Screen }
   | { type: "book" }
   | { type: "revoke"; choice: Choice; value: boolean }
-  | { type: "logCall"; id: string; call: Omit<CallAttempt, "at"> }
+  | { type: "logCall"; id: string; call: Omit<CallAttempt, "at">; changes?: Partial<Record<Choice, boolean>>; confirmed?: Record<string, Tri> }
   | { type: "amend"; id: string; on: boolean }
   | { type: "reset"; lang?: Lang }
   | { type: "load"; state: Partial<State> };
@@ -56,7 +57,9 @@ function reducer(s: State, a: Action): State {
     case "go":
       return { ...s, screen: a.screen };
     case "book": {
-      const p = { ...s.p, id: "CA-24117", bookedAt: now(tick) };
+      // An opt-in left unticked is a no, and is logged as one.
+      const base = s.p.consent.news === undefined ? setChoice(s.p, "news", false, now(tick)) : s.p;
+      const p = { ...base, id: "CA-24117", bookedAt: now(tick) };
       return { ...s, minute: tick, p, booked: true, screen: "done", queue: [p, ...s.queue.filter((q) => q.id !== p.id)] };
     }
     case "revoke": {
@@ -64,9 +67,16 @@ function reducer(s: State, a: Action): State {
       return { ...s, minute: tick, p, queue: s.queue.map((q) => (q.id === p.id ? p : q)), lastChange: { choice: a.choice, value: a.value, at: now(tick) } };
     }
     case "logCall": {
-      const call = { ...a.call, at: now(tick) };
-      const queue = s.queue.map((q) => (q.id === a.id ? { ...q, calls: [...q.calls, call] } : q));
-      const p = s.p.id === a.id ? { ...s.p, calls: [...s.p.calls, call] } : s.p;
+      const at = now(tick);
+      const apply = (q: Participant): Participant => {
+        let next: Participant = { ...q, calls: [...q.calls, { ...a.call, at }], callAnswers: { ...q.callAnswers, ...a.confirmed } };
+        if (a.call.disposition === "wrongNumber") next.wrongNumber = true;
+        // A choice changed out loud on the call is logged as a staff entry, in the call's language.
+        for (const [c, v] of Object.entries(a.changes ?? {}) as [Choice, boolean][]) next = setChoice({ ...next, lang: a.call.lang }, c, v, at, { by: "staff", name: a.call.by });
+        return { ...next, lang: q.lang };
+      };
+      const queue = s.queue.map((q) => (q.id === a.id ? apply(q) : q));
+      const p = s.p.id === a.id ? apply(s.p) : s.p;
       return { ...s, minute: tick, queue, p };
     }
     case "amend":

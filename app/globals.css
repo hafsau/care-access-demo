@@ -14,73 +14,55 @@
  *
  * Adapted for WCAG 2.2 AA, each listed on /system:
  *  - care-borderColor #E2E8F0 is 1.2:1 against white: fine for dividers,
- *    too faint for a control's edge (1.4.11). Inputs and option rows use
- *    "control" #7A8A86 (3.4:1 on the page, 3.6:1 on white).
+ *    too faint for a control's edge (1.4.11). Input borders use their
+ *    care-motion600 #118577 instead (4.3:1 on the page).
+ *  - Errors use their Flowbite reds: red-800 on red-50, red-600 borders.
  *  - care-sunrise #F75C2E is 3.0:1 on background: decoration only. Text
  *    accents use care-sunset #B54500 (5.2:1).
  *  - care-motion #009991 is 3.3:1: indicators only, never text.
  */
-:root {
-  --care-boots: #19686b;
-  --care-dusk: #0f3d42;
-  --care-cta: #0d715e;
-  --care-motion: #009991;
-  --care-sunrise: #f75c2e;
-  --care-sunset: #b54500;
-  --care-grace: #abc9ba;
-  --care-grace-light: #e6f8ef;
-  --care-ivory: #f1ede2;
-  --care-ivory-300: #f2ede0;
-  --care-background: #fbf8f4;
-  --care-background-light: #f5f2ea;
-  --care-gray-light: #f3f4f6;
-  --care-gray-dark: #5f6577;
-  --care-border: #e2e8f0;
-
-  /* Additions for this concept (not in their CSS), each checked for contrast. */
-  --control: #7a8a86;
-  --not: #9a3a00;
-  --not-bg: #fcebe1;
-  --danger: #b3261e;
-  --danger-bg: #fbe9e7;
-}
-
+/*
+ * Utilities are named exactly as in their codebase (bg-care-ctaDefault,
+ * text-care-gray_dark, border-care-borderColor, bg-ivory-300, ...), so a
+ * component here reads like one of theirs. Type and radius use the Tailwind
+ * scale their pages use (text-sm to text-4xl, rounded-lg to rounded-3xl).
+ */
 @theme inline {
-  --color-boots: var(--care-boots);
-  --color-dusk: var(--care-dusk);
-  --color-cta: var(--care-cta);
-  --color-motion: var(--care-motion);
-  --color-sunrise: var(--care-sunrise);
-  --color-sunset: var(--care-sunset);
-  --color-grace: var(--care-grace);
-  --color-grace-light: var(--care-grace-light);
-  --color-ivory: var(--care-ivory);
-  --color-ivory-300: var(--care-ivory-300);
-  --color-background: var(--care-background);
-  --color-background-light: var(--care-background-light);
-  --color-gray-light: var(--care-gray-light);
-  --color-muted: var(--care-gray-dark);
-  --color-line: var(--care-border);
-  --color-control: var(--control);
-  --color-met: var(--care-cta);
-  --color-met-bg: var(--care-grace-light);
-  --color-not: var(--not);
-  --color-not-bg: var(--not-bg);
-  --color-unknown: var(--care-dusk);
-  --color-unknown-bg: var(--care-ivory);
-  --color-danger: var(--danger);
-  --color-danger-bg: var(--danger-bg);
+  --color-care-boots: #19686b;
+  --color-care-dusk: #0f3d42;
+  --color-care-ctaDefault: #0d715e;
+  --color-care-motion: #009991;
+  --color-care-motion600: #118577;
+  --color-care-sunrise: #f75c2e;
+  --color-care-sunset: #b54500;
+  --color-care-grace: #abc9ba;
+  --color-care-grace_light: #e6f8ef;
+  --color-care-ivory: #f1ede2;
+  --color-care-ivory_light: #f5f5f5;
+  --color-ivory-300: #f2ede0;
+  --color-care-background: #fbf8f4;
+  --color-care-background_light: #f5f2ea;
+  --color-care-gray_light: #f3f4f6;
+  --color-care-gray_dark: #5f6577;
+  --color-care-borderColor: #e2e8f0;
+  --color-care-white: #ffffff;
+  /* Flowbite's red scale, as their CSS defines it, for errors. */
+  --color-red-50: #fdf2f2;
+  --color-red-100: #fde8e8;
+  --color-red-600: #e02424;
+  --color-red-700: #c81e1e;
+  --color-red-800: #9b1c1c;
   --font-sans: var(--font-plex-sans), system-ui, sans-serif;
   --font-serif: var(--font-plex-serif), Georgia, serif;
 }
 
 html {
-  background: var(--care-background);
+  background: #fbf8f4;
 }
 
 body {
-  background: var(--care-background);
-  color: var(--care-dusk);
+  background: #fbf8f4;
+  color: #0f3d42;
 }
 
 /* Their headings: Plex Serif, regular weight. */
@@ -90,7 +72,7 @@ body {
   line-height: 1.2;
 }
 
-/* Their small uppercase section labels ("SOURCES"): Plex Sans 500, 0.05em. */
+/* Their small uppercase section labels ("SOURCES"): Plex Sans 500, 0.05em (tracking-wider). */
 .eyebrow {
   font-weight: 500;
   text-transform: uppercase;
@@ -107,8 +89,14 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--care-sunset);
+  outline: 3px solid #b54500;
   outline-offset: 2px;
+}
+
+/* On dusk and boots surfaces the sunset ring is too faint (2.2:1); use white. */
+.bg-care-dusk :focus-visible,
+.bg-care-boots :focus-visible {
+  outline-color: #ffffff;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {

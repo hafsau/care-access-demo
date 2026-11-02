@@ -19,3 +19,16 @@ test("the consent cards reflow at 320px with text spacing increased (WCAG 1.4.12
   const { sw, cw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
   expect(sw).toBeLessThanOrEqual(cw);
 });
+
+test.describe("200% zoom", () => {
+  // A 1280x800 window at 200% zoom lays out like a 640x400 viewport.
+  test.use({ viewport: { width: 640, height: 400 } });
+  for (const path of ["/", "/prescreen", "/coordinator"]) {
+    test(`no horizontal scroll at 200% zoom on ${path}`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator("h1").first()).toBeVisible();
+      const { sw, cw } = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+      expect(sw).toBeLessThanOrEqual(cw);
+    });
+  }
+});
