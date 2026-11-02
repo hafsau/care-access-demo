@@ -99,7 +99,7 @@ export function ParticipantFlow({ framed = false, manageFocus = true, showErrors
 
       {p.lang === "es" && !SPANISH_REVIEW.reviewed && (
         <p lang="en" className="bg-care-ivory px-4 py-1.5 text-xs text-care-gray_dark">
-          Spanish drafted for this concept; native-speaker review pending.
+          Spanish drafted for this concept; not reviewed by a native speaker.
         </p>
       )}
 

@@ -177,7 +177,7 @@ export default function CaseStudy() {
             <span className="font-semibold">Proposed:</span> all consent wording, pending legal and regulatory review. It isn&apos;t study informed consent, which happens later with a study team.
           </li>
           <li>
-            <span className="font-semibold">Spanish:</span> drafted for this concept; native-speaker review pending.
+            <span className="font-semibold">Spanish:</span> drafted for this concept and checked for plain language, but not reviewed by a native speaker. Before launch it would need review by a native Spanish speaker and a medical translator.
           </li>
           <li>
             <span className="font-semibold">AI use:</span> built with Claude Code. I made the product and design calls, wrote the rules, and reviewed the copy; AI agents also reviewed the plan from several roles. No real participant data was used.

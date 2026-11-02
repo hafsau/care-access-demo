@@ -530,5 +530,5 @@ const es: Copy = {
 
 export const COPY: Record<Lang, Copy> = { en, es };
 
-/** Whether the Spanish has been reviewed by a native speaker. Shown on every Spanish page until it is. */
+/** The Spanish hasn't been reviewed by a native speaker; every Spanish page says so. */
 export const SPANISH_REVIEW: { reviewed: boolean; by?: string } = { reviewed: false };

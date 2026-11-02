@@ -100,7 +100,7 @@ export function StatesGallery() {
     <div className="mx-auto max-w-[1320px] px-4 py-8 sm:px-6">
       <Eyebrow>States and edge cases</Eyebrow>
       <h1 className="display mt-1 text-4xl text-care-dusk">Everything that isn&apos;t the happy path</h1>
-      <p className="mt-2 max-w-2xl text-base leading-7">Each example runs the real components with its own record, so what you see here is what ships. Spanish examples are drafts pending native-speaker review.</p>
+      <p className="mt-2 max-w-2xl text-base leading-7">Each example runs the real components with its own record, so what you see here is what ships. Spanish examples are drafts, not reviewed by a native speaker.</p>
 
       <h2 className="display mt-10 text-3xl">On her phone</h2>
       <div className="mt-4 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
